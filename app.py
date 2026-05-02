@@ -9,7 +9,12 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 # 1. API 및 구글 권한 설정
-st.secrets["api_key"]
+try:
+    SERP_API_KEY = st.secrets["serp_api_key"]
+except:
+    st.error("Secrets에 'serp_api_key'가 설정되지 않았습니다.")
+    SERP_API_KEY = None
+    
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 def authenticate_google_calendar():
