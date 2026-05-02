@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 # 1. API 및 구글 권한 설정
-SERP_API_KEY = "78e3b24b3edb3086c4c3b52355f50e13aac2adc6d9b444e782f6ab3d4a006f0e"
+st.secrets["api_key"]
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 def authenticate_google_calendar():
@@ -48,7 +48,6 @@ def add_to_calendar(service, summary, departure_date, airline):
         return None
 
 def fetch_flights(departure_id, arrival_id, outbound_date):
-    """Google Flights 데이터를 SerpApi를 통해 가져옵니다."""
     url = "https://serpapi.com/search.json"
     params = {
         "engine": "google_flights",
@@ -59,12 +58,27 @@ def fetch_flights(departure_id, arrival_id, outbound_date):
         "hl": "ko",
         "api_key": SERP_API_KEY
     }
+    
     try:
         response = requests.get(url, params=params)
-        return response.json()
+        res_data = response.json()
+        
+        # 1. API 응답 자체에 에러가 있는지 확인
+        if "error" in res_data:
+            st.error(f"⚠️ SerpApi 에러 발생: {res_data['error']}")
+            return None
+            
+        # 2. 검색 결과가 아예 없는 경우
+        if "best_flights" not in res_data:
+            st.warning("🧐 검색 결과는 성공했으나, 해당 날짜에 추천 항공권(Best Flights)이 없습니다.")
+            # 데이터 구조를 확인해보고 싶다면 아래 주석을 해제하세요
+            # st.write(res_data) 
+            return None
+            
+        return res_data
+        
     except Exception as e:
-        st.error(f"데이터를 가져오는데 실패했습니다: {e}")
-        st.write(response.json())
+        st.error(f"🚨 네트워크 또는 코드 오류: {e}")
         return None
 
 # --- UI 부분 ---
