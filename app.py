@@ -106,7 +106,7 @@ with col1:
 with col2:
     arr = st.text_input("도착지 (공항코드)", value="KIX")
 with col3:
-    date = st.date_input("출발 일자")
+    date = st.date_input("출발 일자"),
     date = st.date_input("오는 날자")
 
 if st.button("최적의 항공권 찾기"):
