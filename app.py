@@ -7,6 +7,7 @@ from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
+import json
 
 # 1. API 및 구글 권한 설정
 # SerpApi 키는 Streamlit Cloud의 Settings -> Secrets에 serp_api_key로 저장하세요.
@@ -18,22 +19,33 @@ except:
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 def authenticate_google_calendar():
-    """구글 캘린더 API 인증을 수행합니다."""
     creds = None
-    if os.path.exists('token.json'):
-        creds = Credentials.from_authorized_user_file('token.json', SCOPES)
+    # 1. token.json 경로는 그대로 유지 (서버 실행 시 생성됨)
+    token_path = os.path.join(os.getcwd(), 'token.json')
+    
+    if os.path.exists(token_path):
+        creds = Credentials.from_authorized_user_file(token_path, SCOPES)
+        
     if not creds or not creds.valid:
         if creds and creds.expired and creds.refresh_token:
             creds.refresh(Request())
         else:
-            if os.path.exists('credentials.json'):
-                flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
-                creds = flow.run_local_server(port=0)
-            else:
-                st.error("credentials.json 파일이 없습니다. 설정을 확인해주세요.")
-                return None
-        with open('token.json', 'w') as token:
+            # 2. 파일이 없으면 Secrets에서 읽어와서 임시 파일 생성
+            if not os.path.exists('credentials.json'):
+                try:
+                    creds_dict = json.loads(st.secrets["google_credentials"])
+                    with open('credentials.json', 'w') as f:
+                        json.dump(creds_dict, f)
+                except Exception as e:
+                    st.error("Secrets에서 구글 인증 정보를 읽지 못했습니다.")
+                    return None
+            
+            flow = InstalledAppFlow.from_client_secrets_file('credentials.json', SCOPES)
+            creds = flow.run_local_server(port=0)
+            
+        with open(token_path, 'w') as token:
             token.write(creds.to_json())
+            
     return build('calendar', 'v3', credentials=creds)
 
 def add_to_calendar(service, summary, departure_date, airline, return_date=None):
