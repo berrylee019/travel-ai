@@ -59,9 +59,11 @@ def fetch_flights(departure_id, arrival_id, outbound_date):
         "departure_id": departure_id,
         "arrival_id": arrival_id,
         "outbound_date": outbound_date,
+        "return_date": str(ret_date),
         "currency": "KRW",
         "hl": "ko",
         "type": "2",
+        "type": "1",
         "api_key": SERP_API_KEY
     }
     
@@ -105,6 +107,7 @@ with col2:
     arr = st.text_input("도착지 (공항코드)", value="KIX")
 with col3:
     date = st.date_input("출발 일자")
+    date = st.date_input("오는 날자")
 
 if st.button("최적의 항공권 찾기"):
     with st.spinner("AI가 실시간 최저가와 동선을 분석 중입니다..."):
