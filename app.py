@@ -59,7 +59,7 @@ def fetch_flights(departure_id, arrival_id, outbound_date):
         "departure_id": departure_id,
         "arrival_id": arrival_id,
         "outbound_date": outbound_date,
-        "return_date": ret_date,
+        "return_date": str(ret_date),
         "currency": "KRW",
         "hl": "ko",
         "type": "2",
