@@ -61,7 +61,7 @@ def fetch_flights(departure_id, arrival_id, outbound_date):
         "outbound_date": outbound_date,
         "currency": "KRW",
         "hl": "ko",
-        "type": "1",
+        "type": "2",
         "api_key": SERP_API_KEY
     }
     
