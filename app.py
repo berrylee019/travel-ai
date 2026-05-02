@@ -9,7 +9,7 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 # 1. API 및 구글 권한 설정
-SERP_API_KEY = "YOUR_SERP_API_KEY"
+SERP_API_KEY = "78e3b24b3edb3086c4c3b52355f50e13aac2adc6d9b444e782f6ab3d4a006f0e"
 SCOPES = ['https://www.googleapis.com/auth/calendar.events']
 
 def authenticate_google_calendar():
@@ -64,6 +64,7 @@ def fetch_flights(departure_id, arrival_id, outbound_date):
         return response.json()
     except Exception as e:
         st.error(f"데이터를 가져오는데 실패했습니다: {e}")
+        st.write(response.json())
         return None
 
 # --- UI 부분 ---
