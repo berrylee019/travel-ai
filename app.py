@@ -22,10 +22,8 @@ with st.form("travel_form"):
     submit_button = st.form_submit_button("일정 생성 시작!")
 
 # 1. 버튼이 눌리면 검색 수행
+# 1. 버튼이 눌리면 검색 수행
 if submit_button:
-    # 이름에 숫자가 3개 이상 들어가거나(코드성), 특정 키워드가 포함되면 제외
-    if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
-    
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
@@ -42,52 +40,43 @@ if submit_button:
                 st.error("위치 검색 오류")
                 st.stop()
 
-            # (B) 지역 편향(Location Bias)을 적용한 장소 검색
+            # (B) 지역 편향 검색
             places_found = []
             for interest in interests:
                 results = gmaps.places(
                     query=f"{interest} in {destination}",
                     location=(dest_lat, dest_lng),
-                    radius=50000 # 50km 이내로 제한
+                    radius=50000
                 )
                 for place in results.get('results', [])[:2]:
                     places_found.append({"name": place['name']})
             
-            # (C) 좌표 수집 및 지도 생성
+            # (C) 좌표 수집 및 '이름 필터링' 적용
             valid_coords = []
-            
-            # 여기서부터 for 루프가 시작되어야 합니다.
             for p in places_found:
                 try:
-                    p_data = gmaps.find_place(
-                        p['name'], 
-                        'textquery', 
-                        fields=['name', 'geometry', 'formatted_address']
-                    )
-                    
+                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry'])
                     if p_data.get('candidates'):
                         cand = p_data['candidates'][0]
-                        loc = cand['geometry']['location']
-                        
-                        # 장소 이름이 너무 짧거나(이상한 코드 방지) 체크
                         clean_name = cand['name']
                         
-                        valid_coords.append({
-                            '장소': clean_name, 
-                            'lat': loc['lat'], 
-                            'lng': loc['lng']
-                        })
-                except Exception:
-                    continue  # 이 continue는 반드시 for 루프 안쪽에 있어야 합니다.
+                        # [필터링 로직 위치] 이름에 숫자가 3개 이상 들어간 코드성 이름이면 패스
+                        if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+                            continue
+                        
+                        loc = cand['geometry']['location']
+                        valid_coords.append({'장소': clean_name, 'lat': loc['lat'], 'lng': loc['lng']})
+                except:
+                    continue
             
-            # for 루프가 끝난 뒤 아래 로직 실행
+            # (D) 지도 시각화
             if valid_coords:
                 m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
-                route_coords = []
                 for item in valid_coords:
                     folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
-                    route_coords.append([item['lat'], item['lng']])
                 
+                # 경로 표시 (좌표 리스트 추출)
+                route_coords = [[item['lat'], item['lng']] for item in valid_coords]
                 folium.PolyLine(route_coords, color="blue", weight=2.5).add_to(m)
                 
                 st.session_state.valid_coords = valid_coords
