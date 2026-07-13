@@ -72,7 +72,7 @@ if submit_button:
                             'lat': loc['lat'], 
                             'lng': loc['lng']
                         })
-                except: Exception:
+                except Exception:
                     continue
             
             # (D) 지도 시각화
