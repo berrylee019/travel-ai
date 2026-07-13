@@ -115,7 +115,8 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
                     st.write(f"✅ **{item['장소']}**")
                     st.caption(f"📍 {item['주소']}")
                     # 구글 맵으로 이동하는 버튼
-                    st.link_button("구글 맵에서 보기", f"https://www.google.com/maps/search/?api=1&query={item['place_id']}")
+                    map_url = f"https://www.google.com/maps/place/?q=place_id:{item['place_id']}"
+                    st.link_button("구글 맵에서 보기", map_url)
             else:
                 st.write("해당 날짜에 추천할 장소가 없습니다.")
 
