@@ -23,6 +23,10 @@ with st.form("travel_form"):
 
 # 1. 버튼이 눌리면 검색 수행
 if submit_button:
+    # 이름에 숫자가 3개 이상 들어가거나(코드성), 특정 키워드가 포함되면 제외
+    if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+        continue
+    
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
