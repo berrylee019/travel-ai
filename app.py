@@ -2,6 +2,7 @@ import streamlit as st
 import googlemaps
 import folium
 from streamlit_folium import st_folium
+import numpy as np
 
 # 세션 상태 초기화
 if 'valid_coords' not in st.session_state:
@@ -87,6 +88,24 @@ if submit_button:
 
 # 2. 결과 출력부
 if st.session_state.valid_coords and 'map_data' in st.session_state:
-    st.subheader(f"📍 {destination} 추천 경로")
+    st.subheader(f"📍 {destination} 추천 경로 및 일정")
     st_folium(st.session_state.map_data, width=700, height=500)
-    st.table(st.session_state.valid_coords)
+    
+    # 장소를 일자별로 나누기 (Numpy 사용)
+    data = st.session_state.valid_coords
+    days = st.session_state.get('days', 3) # 폼에서 입력받은 days
+    
+    # 장소들을 days 수만큼 나눔
+    daily_groups = np.array_split(data, days)
+    
+    # 탭으로 일자별 구성
+    tabs = st.tabs([f"{i+1}일차" for i in range(days)])
+    
+    for i, tab in enumerate(tabs):
+        with tab:
+            if i < len(daily_groups):
+                group = daily_groups[i]
+                for item in group:
+                    st.write(f"✅ {item['장소']}")
+            else:
+                st.write("이 날은 여유롭게 휴식을 즐기세요! ☕")
