@@ -73,5 +73,5 @@ if submit_button:
             # Streamlit에 지도 렌더링
             st.subheader("📍 여행 동선 지도")
             st_folium(m, width=700, height=500)
-        else:
-            st.warning("추천할 장소를 찾지 못했습니다.")
+    else:
+        st.warning("추천할 장소를 찾지 못했습니다.")
