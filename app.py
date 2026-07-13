@@ -56,9 +56,10 @@ if submit_button:
             
             # (C) 좌표 수집 및 지도 생성
             valid_coords = []
+            
+            # 여기서부터 for 루프가 시작되어야 합니다.
             for p in places_found:
                 try:
-                    # 장소의 상세 정보를 가져올 때 'name'과 'formatted_address'를 모두 요청
                     p_data = gmaps.find_place(
                         p['name'], 
                         'textquery', 
@@ -69,25 +70,22 @@ if submit_button:
                         cand = p_data['candidates'][0]
                         loc = cand['geometry']['location']
                         
-                        # 텍스트 정리: 영어 이름과 한글 이름이 섞인 경우 처리
-                        # 구글은 보통 '이름(주소)' 형태로 줄 때가 많습니다.
+                        # 장소 이름이 너무 짧거나(이상한 코드 방지) 체크
                         clean_name = cand['name']
-                        # 필요 시 여기서 추가적인 정제 로직(한글/영어 분리)을 넣을 수 있습니다.
                         
                         valid_coords.append({
-                            '장소': clean_name,  # 'name'에서 '장소'로 변경
+                            '장소': clean_name, 
                             'lat': loc['lat'], 
                             'lng': loc['lng']
                         })
-                except:
-                    continue
+                except Exception:
+                    continue  # 이 continue는 반드시 for 루프 안쪽에 있어야 합니다.
             
+            # for 루프가 끝난 뒤 아래 로직 실행
             if valid_coords:
-                # [지도 생성 로직은 동일합니다]
                 m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
                 route_coords = []
                 for item in valid_coords:
-                    # 팝업에 '장소' 이름을 표시
                     folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
                     route_coords.append([item['lat'], item['lng']])
                 
