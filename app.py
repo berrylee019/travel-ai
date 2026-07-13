@@ -23,7 +23,6 @@ with st.form("travel_form"):
     submit_button = st.form_submit_button("일정 생성 시작!")
 
 # 1. 버튼이 눌리면 검색 수행
-# 1. 버튼이 눌리면 검색 수행
 if submit_button:
     if not destination:
         st.error("여행지를 입력해주세요!")
@@ -82,6 +81,7 @@ if submit_button:
                 
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
+                st.session_state.days = days
             else:
                 st.error("해당 지역 주변에서 장소를 찾을 수 없습니다.")
                 st.session_state.valid_coords = None
@@ -93,19 +93,18 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
     
     # 장소를 일자별로 나누기 (Numpy 사용)
     data = st.session_state.valid_coords
-    days = st.session_state.get('days', 3) # 폼에서 입력받은 days
+    days = st.session_state.get('days', 1) # 폼에서 입력받은 days
     
     # 장소들을 days 수만큼 나눔
-    daily_groups = np.array_split(data, days)
+    daily_groups = np.array_split(data, num_days)
     
     # 탭으로 일자별 구성
-    tabs = st.tabs([f"{i+1}일차" for i in range(days)])
+    tabs = st.tabs([f"{i+1}일차" for i in range(num_days)])
     
     for i, tab in enumerate(tabs):
         with tab:
-            if i < len(daily_groups):
-                group = daily_groups[i]
-                for item in group:
+            if i < len(daily_groups) and len(daily_groups[i]) > 0:
+                for item in daily_group[i]:
                     st.write(f"✅ {item['장소']}")
             else:
-                st.write("이 날은 여유롭게 휴식을 즐기세요! ☕")
+                st.write("해당 날짜에 추천할 장소가 없습니다.")
