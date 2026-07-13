@@ -55,7 +55,7 @@ if submit_button:
             valid_coords = []
             for p in places_found:
                 try:
-                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry'])
+                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
                     if p_data.get('candidates'):
                         cand = p_data['candidates'][0]
                         clean_name = cand['name']
@@ -65,7 +65,13 @@ if submit_button:
                             continue
                         
                         loc = cand['geometry']['location']
-                        valid_coords.append({'장소': clean_name, 'lat': loc['lat'], 'lng': loc['lng']})
+                        valid_coords.append({
+                            '장소': clean_name,
+                            '주소': cand.get('formatted_address', '주소 정보 없음'),
+                            'place_id': cand.get('place_id', ''),
+                            'lat': loc['lat'], 
+                            'lng': loc['lng']
+                        })
                 except:
                     continue
             
@@ -106,6 +112,9 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
         with tab:
             if i < len(daily_groups) and len(daily_groups[i]) > 0:
                 for item in daily_groups[i]:
-                    st.write(f"✅ {item['장소']}")
+                    st.write(f"✅ **{item['장소']}**")
+                    st.caption(f"📍 {item['주소']}")
+                    # 구글 맵으로 이동하는 버튼
+                    st.link_button("구글 맵에서 보기", f"https://www.google.com/maps/search/?api=1&query={item['place_id']}")
             else:
                 st.write("해당 날짜에 추천할 장소가 없습니다.")
