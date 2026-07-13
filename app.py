@@ -118,3 +118,15 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
                     st.link_button("구글 맵에서 보기", f"https://www.google.com/maps/search/?api=1&query={item['place_id']}")
             else:
                 st.write("해당 날짜에 추천할 장소가 없습니다.")
+
+# [출력부 하단 추가]
+if st.session_state.valid_coords:
+    # 텍스트로 일정 요약 생성
+    summary = f"{destination} 여행 일정:\n\n"
+    for i, group in enumerate(daily_groups):
+        summary += f"[{i+1}일차]\n"
+        for item in group:
+            summary += f"- {item['장소']}\n"
+    
+    st.divider()
+    st.text_area("일정 공유하기 (복사해서 친구에게 보내세요!)", value=summary, height=200)
