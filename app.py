@@ -96,6 +96,7 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
     days = st.session_state.get('days', 1) # 폼에서 입력받은 days
     
     # 장소들을 days 수만큼 나눔
+    num_days = int(st.session_state.get('days', 1)) 
     daily_groups = np.array_split(data, num_days)
     
     # 탭으로 일자별 구성
