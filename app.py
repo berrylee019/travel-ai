@@ -105,7 +105,7 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
     for i, tab in enumerate(tabs):
         with tab:
             if i < len(daily_groups) and len(daily_groups[i]) > 0:
-                for item in daily_group[i]:
+                for item in daily_groups[i]:
                     st.write(f"✅ {item['장소']}")
             else:
                 st.write("해당 날짜에 추천할 장소가 없습니다.")
