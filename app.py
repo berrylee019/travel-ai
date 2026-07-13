@@ -1,12 +1,6 @@
 import streamlit as st
 import googlemaps
-import folium
-from streamlit_folium import st_folium
 
-# 세션 상태 초기화
-if 'results' not in st.session_state:
-    st.session_state.results = None
-    
 # 1. API 키 설정 (Streamlit Secrets에서 가져오기)
 # Streamlit Cloud 배포 시 Secrets 설정 필수: 
 # [secrets.toml]
@@ -31,36 +25,22 @@ if submit_button:
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
-        # 1. 장소 검색
+        st.write(f"🔍 {destination} 여행을 위한 {days}일치 일정을 계획 중입니다...")
+        
+        # Google Places API를 통한 장소 검색 (관심사 활용)
         places_found = []
         for interest in interests:
             query = f"{interest} in {destination}"
             results = gmaps.places(query=query)
+            
+            # 검색 결과에서 상위 2개만 추출
             for place in results.get('results', [])[:2]:
-                places_found.append({"name": place['name']})
+                places_found.append({
+                    "name": place['name'],
+                    "address": place['formatted_address'],
+                    "rating": place.get('rating', 0)
+                })
         
-        # 2. 좌표 수집 (에러 방지 추가)
-        valid_coords = []
-        for p in places_found:
-            try:
-                p_data = gmaps.find_place(p['name'], 'textquery', fields=['geometry'])
-                if p_data.get('candidates'):
-                    loc = p_data['candidates'][0]['geometry']['location']
-                    valid_coords.append({'name': p['name'], 'lat': loc['lat'], 'lng': loc['lng']})
-            except Exception as e:
-                continue # 정보 못 찾으면 다음 장소로
-        
-        # 3. 지도 및 시각화
-        if valid_coords:
-            # 지도 중심점: 첫 번째 장소의 좌표
-            m = folium.Map(location=[valid_coords[0]['lat'], valid_coords[0]['lng']], zoom_start=13)
-            
-            route_coords = []
-            for item in valid_coords:
-                folium.Marker([item['lat'], item['lng']], popup=item['name']).add_to(m)
-                route_coords.append([item['lat'], item['lng']])
-            
-            folium.PolyLine(route_coords, color="blue", weight=2.5).add_to(m)
-            st_folium(m, width=700, height=500)
-        else:
-            st.error("좌표를 찾을 수 없습니다. 검색어를 바꿔보세요.")
+        st.subheader("추천 장소 목록")
+        st.table(places_found)
+        st.success("이제 이 장소들을 기반으로 동선을 최적화하겠습니다.")
