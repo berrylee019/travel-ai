@@ -54,23 +54,41 @@ if submit_button:
             valid_coords = []
             for p in places_found:
                 try:
-                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['geometry'])
+                    # 장소의 상세 정보를 가져올 때 'name'과 'formatted_address'를 모두 요청
+                    p_data = gmaps.find_place(
+                        p['name'], 
+                        'textquery', 
+                        fields=['name', 'geometry', 'formatted_address']
+                    )
+                    
                     if p_data.get('candidates'):
-                        loc = p_data['candidates'][0]['geometry']['location']
-                        valid_coords.append({'name': p['name'], 'lat': loc['lat'], 'lng': loc['lng']})
+                        cand = p_data['candidates'][0]
+                        loc = cand['geometry']['location']
+                        
+                        # 텍스트 정리: 영어 이름과 한글 이름이 섞인 경우 처리
+                        # 구글은 보통 '이름(주소)' 형태로 줄 때가 많습니다.
+                        clean_name = cand['name']
+                        # 필요 시 여기서 추가적인 정제 로직(한글/영어 분리)을 넣을 수 있습니다.
+                        
+                        valid_coords.append({
+                            '장소': clean_name,  # 'name'에서 '장소'로 변경
+                            'lat': loc['lat'], 
+                            'lng': loc['lng']
+                        })
                 except:
                     continue
             
             if valid_coords:
+                # [지도 생성 로직은 동일합니다]
                 m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
                 route_coords = []
                 for item in valid_coords:
-                    folium.Marker([item['lat'], item['lng']], popup=item['name']).add_to(m)
+                    # 팝업에 '장소' 이름을 표시
+                    folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
                     route_coords.append([item['lat'], item['lng']])
                 
                 folium.PolyLine(route_coords, color="blue", weight=2.5).add_to(m)
                 
-                # 결과와 지도 객체를 세션에 저장
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
             else:
