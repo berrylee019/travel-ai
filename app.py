@@ -25,8 +25,8 @@ def save_feedback(rating, comment):
             spreadsheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
             sheet = spreadsheet.worksheet("피드백")
             sheet.append_row([str(datetime.datetime.now()), rating, comment])
-        except Exception as e:
-            st.error(f"구글 시트 접근 오류: {e}")
+    except Exception as e:
+        st.error(f"구글 시트 접근 오류: {e}")
 
 @st.cache_resource
 def get_gmaps_client():
