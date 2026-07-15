@@ -14,9 +14,19 @@ def get_client():
     return gspread.authorize(creds)
 
 def save_feedback(rating, comment):
-    client = get_client()
-    sheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
-    sheet.append_row([str(datetime.datetime.now()), rating, comment])
+#    client = get_client()
+#    sheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
+#    sheet.append_row([str(datetime.datetime.now()), rating, comment])
+    
+    try:
+            client = get_client()
+            # 이름 대신 키(ID)를 사용해보세요. 
+            # 파일 URL에서 /d/ 다음부터 /edit 전까지의 긴 문자가 ID입니다.
+            spreadsheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
+            sheet = spreadsheet.worksheet("피드백")
+            sheet.append_row([str(datetime.datetime.now()), rating, comment])
+        except Exception as e:
+            st.error(f"구글 시트 접근 오류: {e}")
 
 @st.cache_resource
 def get_gmaps_client():
