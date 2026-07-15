@@ -14,13 +14,17 @@ def get_client():
     creds_dict = st.secrets["gcp"]["service_account"]
     creds_dict = json.loads(creds_str)
     
-    # 2. 필요한 권한 설정
+    # 2. 데이터 타입에 따른 처리 (문자열이면 json.loads, 아니면 바로 사용)
+    if isinstance(creds_data, str):
+        creds_dict = json.loads(creds_data)
+    else:
+        creds_dict = creds_data
+
     scope = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    
     # 3. 딕셔너리 형태로 바로 인증
     creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
