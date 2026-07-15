@@ -8,6 +8,8 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 import json
 
+st.image("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9zqBbDRhDl9WATjDpLOFMhMosMBDQU07rVsVV80jqjCJ70MxpCx2didYnGQXI7Lg7952zQKC8aZWHFDN06ZN2rSJKwU5Bt2A-TdZo1ZX8PIQSLmRbnSgRWPcfm1aoLM1xkaAw9-mXAKxDymCpTUuebAz8qG2SFLGYUjhRxMYEIdwEMuSvMnpGNTkeolo/s1248/Ah6RG.jpg", use_container_width=True)
+
 # --- 설정 및 함수 정의 (상단 유지) ---
 def get_client():
     # 1. 시크릿에서 가져온 데이터를 변수에 담습니다.
