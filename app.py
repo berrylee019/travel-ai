@@ -57,11 +57,11 @@ if submit_button:
             # (중략: A, B 로직 수행)
             
             # (C) 좌표 수집 및 '이름 필터링' 적용
-            for p in places_found:
-                try:
-                    # ... (로직 수행 중 valid_coords.append()가 일어남)
-                except Exception:
-                    continue
+        for p in places_found:
+            try:
+                # ... (로직 수행 중 valid_coords.append()가 일어남)
+            except Exception:
+                continue
                 
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
