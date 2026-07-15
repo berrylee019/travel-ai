@@ -18,15 +18,17 @@ def save_feedback(rating, comment):
 #    sheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
 #    sheet.append_row([str(datetime.datetime.now()), rating, comment])
     
+# 피드백 저장 함수 (들여쓰기 정리 완료)
+def save_feedback(rating, comment):
     try:
         client = get_client()
-        # 이름 대신 키(ID)를 사용해보세요. 
-        # 파일 URL에서 /d/ 다음부터 /edit 전까지의 긴 문자가 ID입니다.
-        spreadsheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
-        sheet = spreadsheet.worksheet("피드백")
+        # "내여행앱로그" 대신 구글 시트 URL의 ID 값을 쓰시는 걸 강력 추천합니다.
+        # 예: spreadsheet = client.open_by_key("1AbCdEfG...")
+        sheet = client.open("내여행앱로그").worksheet("피드백")
         sheet.append_row([str(datetime.datetime.now()), rating, comment])
     except Exception as e:
-        st.error(f"구글 시트 접근 오류: {e}")
+        # 이 부분이 앞선 except 줄과 정확히 맞춰져야 합니다.
+        st.error(f"피드백 저장 중 오류 발생: {e}")
 
 @st.cache_resource
 def get_gmaps_client():
