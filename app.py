@@ -6,11 +6,13 @@ import numpy as np
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 import datetime
+import json
 
 # --- 설정 및 함수 정의 (상단 유지) ---
 def get_client():
     # 1. secrets에서 정보를 가져옵니다.
     creds_dict = st.secrets["gcp"]["service_account"]
+    creds_dict = json.loads(creds_str)
     
     # 2. 필요한 권한 설정
     scope = [
