@@ -7,3 +7,5 @@ google-auth-oauthlib
 googlemaps
 folium
 streamlit-folium
+gspread
+oauth2client
