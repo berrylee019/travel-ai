@@ -53,7 +53,7 @@ if submit_button:
         # 1. 여기서 미리 빈 리스트를 만들어둡니다.
         valid_coords = [] 
         
-        #with st.spinner('일정을 계산 중입니다...'):
+        with st.spinner('일정을 계산 중입니다...'):
             # (중략: A, B 로직 수행)
             
             # (C) 좌표 수집 및 '이름 필터링' 적용
