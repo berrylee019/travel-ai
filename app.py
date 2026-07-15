@@ -9,13 +9,18 @@ import datetime
 
 # --- 설정 및 함수 정의 (상단 유지) ---
 def get_client():
+    # 1. secrets에서 정보를 가져옵니다.
+    creds_dict = st.secrets["gcp"]["service_account"]
+    
+    # 2. 필요한 권한 설정
     scope = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/spreadsheets",
         "https://www.googleapis.com/auth/drive"
     ]
-    # JSON 키 파일 경로 (형님 환경에 맞춰 수정)
-    creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+    
+    # 3. 딕셔너리 형태로 바로 인증
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(creds_dict, scope)
     client = gspread.authorize(creds)
     return client
 
