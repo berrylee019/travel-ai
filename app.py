@@ -222,8 +222,8 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
         if feedback_text:
             save_feedback("Text", feedback_text)
             st.info("의견이 전송되었습니다.")
-        else:
-            st.warning("의견을 입력해주세요.")
+#        else:
+#            st.warning("의견을 입력해주세요.")
 
     # [핵심] 메시지는 여기서 딱 한 번만 출력!
     if st.session_state.get("feedback_msg"):
