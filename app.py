@@ -54,20 +54,32 @@ if submit_button:
         valid_coords = [] 
         
         with st.spinner('일정을 계산 중입니다...'):
-            # (중략: A, B 로직 수행)
-            places_found = [] 
-            valid_coords = [] 
-            
-            # (B) 지역 편향 검색
-            for interest in interests:
-                results = gmaps.places(
-                    query=f"{interest} in {destination}",
-                    location=(dest_lat, dest_lng),
-                    radius=50000
-                )
-                if results and 'results' in results:
-                    for place in results['results'][:2]:
-                        places_found.append({"name": place['name']})
+            # (A) 여행지의 중심 좌표 찾기
+            try:
+                geo_result = gmaps.geocode(destination)
+                if not geo_result:
+                    st.error("해당 여행지를 찾을 수 없습니다.")
+                    st.stop()
+                
+                # 변수를 여기서 정의합니다.
+                dest_loc = geo_result[0]['geometry']['location']
+                dest_lat, dest_lng = dest_loc['lat'], dest_loc['lng']
+                
+                # [중요] 반드시 이 안쪽(indentation 내부)에서 검색 로직을 수행하세요!
+                # (B) 지역 편향 검색
+                places_found = []
+                for interest in interests:
+                    results = gmaps.places(
+                        query=f"{interest} in {destination}",
+                        location=(dest_lat, dest_lng), # 이제 dest_lat이 정의되어 에러가 안 납니다.
+                        radius=50000
+                    )
+                    if results and 'results' in results:
+                        for place in results['results'][:2]:
+                            places_found.append({"name": place['name']})
+            except Exception as e:
+                st.error(f"위치 검색 오류: {e}")
+                st.stop()
                         
                 for place in results.get('results', [])[:2]:
                     places_found.append({"name": place['name']})
