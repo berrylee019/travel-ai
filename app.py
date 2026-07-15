@@ -15,7 +15,7 @@ def get_client():
 
 def save_feedback(rating, comment):
     client = get_client()
-    sheet = client.open("내여행앱로그").worksheet("피드백")
+    sheet = client.open_by_key("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w")
     sheet.append_row([str(datetime.datetime.now()), rating, comment])
 
 @st.cache_resource
