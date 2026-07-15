@@ -42,7 +42,7 @@ def save_feedback(rating, comment):
         client = get_client()
         # 시트 이름이 아닌, 시트 파일 URL에서 긴 ID 값을 가져와서 넣는 것을 추천합니다.
         # 예: sheet = client.open_by_key("여기에_긴_ID_입력").worksheet("피드백")
-        sheet = client.open("내여행앱로그").worksheet("피드백")
+        sheet = client.open("시트1").worksheet("피드백")
         sheet.append_row([str(datetime.datetime.now()), rating, comment])
     except Exception as e:
         # 에러가 나면 화면에 친절하게 띄워줍니다.
