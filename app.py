@@ -46,18 +46,22 @@ with st.form("travel_form"):
     submit_button = st.form_submit_button("일정 생성 시작!")
 
 if submit_button:
+    st.session_state.show_result = True
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
+        # 1. 여기서 미리 빈 리스트를 만들어둡니다.
+        valid_coords = [] 
+        
         with st.spinner('일정을 계산 중입니다...'):
-            # (데이터 계산 로직 동일)
-            geo_result = gmaps.geocode(destination)
-            if not geo_result:
-                st.error("해당 여행지를 찾을 수 없습니다.")
-            else:
-                dest_loc = geo_result[0]['geometry']['location']
-                # ... (places_found 및 valid_coords 수집 로직) ...
-                # 위 로직을 통해 valid_coords, m(지도) 생성
+            # (중략: A, B 로직 수행)
+            
+            # (C) 좌표 수집 및 '이름 필터링' 적용
+            for p in places_found:
+                try:
+                    # ... (로직 수행 중 valid_coords.append()가 일어남)
+                except Exception:
+                    continue
                 
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
