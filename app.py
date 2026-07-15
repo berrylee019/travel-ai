@@ -19,8 +19,7 @@ def save_feedback(rating, comment):
 #    sheet.append_row([str(datetime.datetime.now()), rating, comment])
     
 # 피드백 저장 함수 (들여쓰기 정리 완료)
-# 2. 피드백 수집 (화면 하단)
-def save_feedback(rating, comment):
+
     try:
         client = get_client()
         # 시트 이름이 아닌, 시트 파일 URL에서 긴 ID 값을 가져와서 넣는 것을 추천합니다.
