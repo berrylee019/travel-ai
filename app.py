@@ -12,7 +12,7 @@ def get_sheet():
     scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets']
     creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
     client = gspread.authorize(creds)
-    return client.open("내여행앱로그").sheet1 # 시트 이름 변경 필수
+    return client.open("내여행앱로그").시트1 # 시트 이름 변경 필수
 
 # 1. 사용 로그 기록 (검색 시 호출)
 def log_search(destination, days, interests):
@@ -21,6 +21,7 @@ def log_search(destination, days, interests):
 
 # 2. 피드백 수집 (화면 하단)
 def save_feedback(rating, comment):
+    client = get_client() # 함수 안에서 client를 생성하여 오류 해결
     sheet = client.open("내여행앱로그").worksheet("피드백") # 별도 탭
     sheet.append_row([str(datetime.datetime.now()), rating, comment])
     
@@ -45,6 +46,7 @@ with st.form("travel_form"):
 
 # 1. 버튼이 눌리면 검색 수행
 if submit_button:
+    st.session_state.show_result = True
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
@@ -151,7 +153,9 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
 # [출력부 하단 추가]
 if st.session_state.valid_coords and 'map_data' in st.session_state:
     st.subheader(f"📍 {destination} 추천 경로 및 일정")
-    
+
+
+if st.session_state.get("show_result"):
     # 1. 레이아웃 분할 (좌: 지도, 우: 일정 탭)
     col1, col2 = st.columns([1, 1])
     
