@@ -127,7 +127,9 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     # 2. 지도 출력
     with col1:
         #st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
-        st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
+        if st.session_state.get("map_data"):
+            st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
+    
     # 3. 일정 탭 출력
     with col2:
         num_days = int(st.session_state.get('days', 1))
