@@ -60,7 +60,15 @@ if submit_button:
             
             # (B) 지역 편향 검색
             for interest in interests:
-                # ... (gmaps.places 검색 로직) ...
+                results = gmaps.places(
+                    query=f"{interest} in {destination}",
+                    location=(dest_lat, dest_lng),
+                    radius=50000
+                )
+                if results and 'results' in results:
+                    for place in results['results'][:2]:
+                        places_found.append({"name": place['name']})
+                        
                 for place in results.get('results', [])[:2]:
                     places_found.append({"name": place['name']})
                     
