@@ -39,14 +39,24 @@ def save_feedback(rating, comment):
 # 피드백 저장 함수 (들여쓰기 정리 완료)
 
     try:
-        client = get_client()
-        # 시트 이름이 아닌, 시트 파일 URL에서 긴 ID 값을 가져와서 넣는 것을 추천합니다.
-        # 예: sheet = client.open_by_key("여기에_긴_ID_입력").worksheet("피드백")
-        sheet = client.open("1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w").worksheet("피드백")
-        sheet.append_row([str(datetime.datetime.now()), rating, comment])
-    except Exception as e:
-        # 에러가 나면 화면에 친절하게 띄워줍니다.
-        st.error(f"의견 전송 중 문제가 발생했습니다: {e}")
+            client = get_client()
+            
+            # 1. 파일 이름 대신 '고유 ID'를 사용하는 것이 훨씬 정확합니다.
+            # 구글 시트 URL 주소창에 보면 /d/ 뒤부터 /edit 전까지의 긴 문자열이 ID입니다.
+            spreadsheet_id = "1xryDZgNxkMvZChlUk9u9QXyWg7nO7bm9gx3GUAomo6w"
+            
+            # 2. open_by_key로 열기
+            spreadsheet = client.open_by_key(spreadsheet_id)
+            sheet = spreadsheet.worksheet("피드백")
+            
+            # 3. 데이터 추가
+            sheet.append_row([str(datetime.datetime.now()), rating, comment])
+            
+            # 4. 성공 메시지 출력 (Response [200] 대신 깔끔하게!)
+            st.success("의견이 성공적으로 전송되었습니다! 감사합니다.")
+            
+        except Exception as e:
+            st.error(f"의견 전송 중 문제가 발생했습니다: {e}")
 
 @st.cache_resource
 def get_gmaps_client():
