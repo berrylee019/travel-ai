@@ -149,7 +149,8 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
     col1, col2 = st.columns([1, 1])
     
     with col1:
-        st_folium(st.session_state.map_data, width=400, height=400)
+        # st_folium에 key를 추가하여 중복을 방지합니다.
+        st_folium(st.session_state.map_data, width=400, height=400, key="travel_map")
     
     with col2:
         # 일자별 일정 탭
