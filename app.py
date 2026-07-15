@@ -55,8 +55,8 @@ def save_feedback(rating, comment):
             # 4. 성공 메시지 출력 (Response [200] 대신 깔끔하게!)
             st.success("의견이 성공적으로 전송되었습니다! 감사합니다.")
             
-        except Exception as e:
-            st.error(f"의견 전송 중 문제가 발생했습니다: {e}")
+    except Exception as e:
+        st.error(f"의견 전송 중 문제가 발생했습니다: {e}")
 
 @st.cache_resource
 def get_gmaps_client():
