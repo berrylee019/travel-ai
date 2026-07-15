@@ -109,9 +109,16 @@ if submit_button:
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
                 st.session_state.days = days
+                st.session_state.show_result = True # 결과 표시 플래그
             else:
                 st.error("해당 지역 주변에서 장소를 찾을 수 없습니다.")
                 st.session_state.valid_coords = None
+
+            if st.session_state.get("show_result"):
+                # 여기서 col1, col2 레이아웃과 피드백 버튼을 모두 처리
+                col1, col2 = st.columns([1, 1])
+                with col1:
+                    st_folium(st.session_state.map_data, key="map_unique")
 
 # 2. 결과 출력부
 if st.session_state.valid_coords and 'map_data' in st.session_state:
@@ -150,7 +157,7 @@ if st.session_state.valid_coords and 'map_data' in st.session_state:
     
     with col1:
         # st_folium에 key를 추가하여 중복을 방지합니다.
-        st_folium(st.session_state.map_data, width=400, height=400, key="travel_map")
+        st_folium(st.session_state.map_data, width=400, height=400, key=f"map_{st.session_state.get('search_count', 0)}")
     
     with col2:
         # 일자별 일정 탭
