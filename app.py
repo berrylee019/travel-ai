@@ -190,23 +190,34 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     # 3. 피드백 섹션
     st.divider()
     st.write("### 💬 이 일정이 도움이 되었나요?")
-    f_col1, f_col2 = st.columns(2)
     
-    # 세션 상태에 피드백 여부를 기록하여 중복 제출 방지
+    # 세션 상태 초기화
     if "feedback_submitted" not in st.session_state:
         st.session_state.feedback_submitted = False
-
-    with f_col1:
-        if st.button("👍 좋았어요") and not st.session_state.feedback_submitted:
-            save_feedback("Good", "사용자 긍정 평가")
-            st.session_state.feedback_submitted = True
-            st.success("소중한 의견 감사합니다!")
-    with f_col2:
-        if st.button("👎 아쉬워요") and not st.session_state.feedback_submitted:
-            save_feedback("Bad", "사용자 부정 평가")
-            st.session_state.feedback_submitted = True
-            st.warning("더 개선하도록 하겠습니다.")
+    if "feedback_message" not in st.session_state:
+        st.session_state.feedback_message = ""
     
+    # 이미 피드백을 보냈다면 메시지만 보여줌
+    if st.session_state.feedback_submitted:
+        st.success(st.session_state.feedback_message)
+    else:
+        f_col1, f_col2 = st.columns(2)
+        
+        with f_col1:
+            if st.button("👍 좋았어요"):
+                save_feedback("Good", "사용자 긍정 평가")
+                st.session_state.feedback_submitted = True
+                st.session_state.feedback_message = "소중한 의견 감사합니다!"
+                st.rerun() # 즉시 새로고침하여 메시지 노출
+                
+        with f_col2:
+            if st.button("👎 아쉬워요"):
+                save_feedback("Bad", "사용자 부정 평가")
+                st.session_state.feedback_submitted = True
+                st.session_state.feedback_message = "더 개선하도록 하겠습니다."
+                st.rerun() # 즉시 새로고침하여 메시지 노출
+    
+    # 기타 의견 섹션
     feedback_text = st.text_area("기타 자유 의견을 남겨주세요!")
     if st.button("의견 보내기"):
         if feedback_text:
