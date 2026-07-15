@@ -9,9 +9,15 @@ import datetime
 
 # --- 설정 및 함수 정의 (상단 유지) ---
 def get_client():
-    scope = ["https://spreadsheets.google.com/feeds", 'https://www.googleapis.com/auth/spreadsheets']
-    creds = ServiceAccountCredentials.from_json_keyfile_dict(st.secrets["gcp_service_account"], scope)
-    return gspread.authorize(creds)
+    scope = [
+        "https://spreadsheets.google.com/feeds",
+        "https://www.googleapis.com/auth/spreadsheets",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    # JSON 키 파일 경로 (형님 환경에 맞춰 수정)
+    creds = ServiceAccountCredentials.from_json_keyfile_name("service_account.json", scope)
+    client = gspread.authorize(creds)
+    return client
 
 def save_feedback(rating, comment):
 #    client = get_client()
