@@ -46,73 +46,75 @@ with st.form("travel_form"):
     submit_button = st.form_submit_button("일정 생성 시작!")
 
 if submit_button:
-    st.session_state.show_result = True
     if not destination:
         st.error("여행지를 입력해주세요!")
     else:
-        # 1. 여기서 미리 빈 리스트를 만들어둡니다.
-        valid_coords = [] 
-        
         with st.spinner('일정을 계산 중입니다...'):
-            # (A) 여행지의 중심 좌표 찾기
+            valid_coords = []
             try:
+                # (A) 중심 좌표 찾기
                 geo_result = gmaps.geocode(destination)
                 if not geo_result:
                     st.error("해당 여행지를 찾을 수 없습니다.")
                     st.stop()
                 
-                # 변수를 여기서 정의합니다.
                 dest_loc = geo_result[0]['geometry']['location']
                 dest_lat, dest_lng = dest_loc['lat'], dest_loc['lng']
                 
-                # [중요] 반드시 이 안쪽(indentation 내부)에서 검색 로직을 수행하세요!
                 # (B) 지역 편향 검색
                 places_found = []
                 for interest in interests:
                     results = gmaps.places(
                         query=f"{interest} in {destination}",
-                        location=(dest_lat, dest_lng), # 이제 dest_lat이 정의되어 에러가 안 납니다.
+                        location=(dest_lat, dest_lng),
                         radius=50000
                     )
                     if results and 'results' in results:
                         for place in results['results'][:2]:
                             places_found.append({"name": place['name']})
-            except Exception as e:
-                st.error(f"위치 검색 오류: {e}")
-                st.stop()
-                        
-                for place in results.get('results', [])[:2]:
-                    places_found.append({"name": place['name']})
-                    
-            # (C) 좌표 수집 및 '이름 필터링' 적용
-            for p in places_found:
-                try:
-                    # [여기] 이 내용들이 try보다 4칸 더 들어가 있어야 합니다!
-                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
-                    if p_data.get('candidates'):
-                        cand = p_data['candidates'][0]
-                        clean_name = cand['name']
-                        
-                        if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
-                            continue
-                        
-                        loc = cand['geometry']['location']
-                        valid_coords.append({
-                            '장소': clean_name,
-                            '주소': cand.get('formatted_address', '주소 정보 없음'),
-                            'place_id': cand.get('place_id', ''),
-                            'lat': loc['lat'], 
-                            'lng': loc['lng']
-                        })
-                except Exception:
-                    # [여기] except도 try와 세로 줄을 맞춰야 합니다.
-                    continue
                 
-                st.session_state.valid_coords = valid_coords
-                st.session_state.map_data = m
-                st.session_state.days = days
-                st.session_state.show_result = True
-                st.session_state.destination = destination # destination도 저장 필요
+                # (C) 좌표 수집 및 필터링
+                for p in places_found:
+                    try:
+                        p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
+                        if p_data.get('candidates'):
+                            cand = p_data['candidates'][0]
+                            clean_name = cand['name']
+                            if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+                                continue
+                            
+                            loc = cand['geometry']['location']
+                            valid_coords.append({
+                                '장소': clean_name,
+                                '주소': cand.get('formatted_address', '주소 정보 없음'),
+                                'place_id': cand.get('place_id', ''),
+                                'lat': loc['lat'], 
+                                'lng': loc['lng']
+                            })
+                    except Exception:
+                        continue
+                
+                # (D) 지도 시각화 (장소가 있을 때만 m 생성)
+                if valid_coords:
+                    m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
+                    for item in valid_coords:
+                        folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
+                    
+                    route_coords = [[item['lat'], item['lng']] for item in valid_coords]
+                    folium.PolyLine(route_coords, color="blue", weight=2.5).add_to(m)
+                    
+                    # 세션 저장
+                    st.session_state.valid_coords = valid_coords
+                    st.session_state.map_data = m
+                    st.session_state.days = days
+                    st.session_state.destination = destination
+                    st.session_state.show_result = True
+                else:
+                    st.warning("검색 결과가 없습니다.")
+                    st.session_state.show_result = False
+
+            except Exception as e:
+                st.error(f"오류 발생: {e}")
 
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
