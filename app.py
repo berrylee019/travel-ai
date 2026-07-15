@@ -226,7 +226,6 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
             st.warning("의견을 입력해주세요.")
 
     # [핵심] 메시지는 여기서 딱 한 번만 출력!
-    if st.session_state.feedback_msg:
+    if st.session_state.get("feedback_msg"):
         st.success(st.session_state.feedback_msg)
-        # 메시지를 보여준 뒤엔 다시 None으로 초기화 (새로고침 시 사라지게)
         st.session_state.feedback_msg = None
