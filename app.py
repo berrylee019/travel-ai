@@ -55,7 +55,15 @@ if submit_button:
         
         with st.spinner('일정을 계산 중입니다...'):
             # (중략: A, B 로직 수행)
+            places_found = [] 
+            valid_coords = [] 
             
+            # (B) 지역 편향 검색
+            for interest in interests:
+                # ... (gmaps.places 검색 로직) ...
+                for place in results.get('results', [])[:2]:
+                    places_found.append({"name": place['name']})
+                    
             # (C) 좌표 수집 및 '이름 필터링' 적용
         for p in places_found:
             try:
