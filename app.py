@@ -188,29 +188,28 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     st.text_area("📋 일정 공유하기 (복사해서 친구에게 보내세요!)", value=summary, height=150)
 
     # 3. 피드백 섹션
-    st.divider()
-    st.write("### 💬 이 일정이 도움이 되었나요?")
-    f_col1, f_col2 = st.columns(2)
+    st.subheader("사용자 의견")
     
-    # 세션 상태에 피드백 여부를 기록하여 중복 제출 방지
-    if "feedback_submitted" not in st.session_state:
-        st.session_state.feedback_submitted = False
-
-    with f_col1:
-        if st.button("👍 좋았어요") and not st.session_state.feedback_submitted:
-            save_feedback("Good", "사용자 긍정 평가")
-            st.session_state.feedback_submitted = True
-            st.success("소중한 의견 감사합니다!")
-    with f_col2:
-        if st.button("👎 아쉬워요") and not st.session_state.feedback_submitted:
-            save_feedback("Bad", "사용자 부정 평가")
-            st.session_state.feedback_submitted = True
-            st.warning("더 개선하도록 하겠습니다.")
+    # 1. 컬럼으로 버튼 나란히 배치
+    col1, col2 = st.columns(2)
     
-    feedback_text = st.text_area("기타 자유 의견을 남겨주세요!")
-    if st.button("의견 보내기"):
-        if feedback_text:
-            save_feedback("Text", feedback_text)
-            st.info("의견이 전송되었습니다.")
-        else:
-            st.warning("의견을 입력해주세요.")
+    with col1:
+        if st.button("👍 좋았어요"):
+            send_feedback("좋았어요") # 아래 정의할 전송 함수
+            
+    with col2:
+        if st.button("👎 아쉬워요"):
+            send_feedback("아쉬워요")
+    
+    # 2. 피드백 전송 함수 정의 (코드 위쪽이나 적절한 곳에 배치)
+    def send_feedback(rating):
+        try:
+            client = get_client()
+            spreadsheet = client.open_by_key("여기에_긴_ID_입력")
+            sheet = spreadsheet.worksheet("피드백")
+            
+            # 현재 시간과 평가를 저장
+            sheet.append_row([str(datetime.datetime.now()), rating, ""])
+            st.success(f"'{rating}' 피드백이 전송되었습니다!")
+        except Exception as e:
+            st.error(f"전송 실패: {e}")
