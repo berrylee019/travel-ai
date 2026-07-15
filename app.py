@@ -65,28 +65,28 @@ if submit_button:
                     places_found.append({"name": place['name']})
                     
             # (C) 좌표 수집 및 '이름 필터링' 적용
-        for p in places_found:
-            try:
-                # [여기] 이 내용들이 try보다 4칸 더 들어가 있어야 합니다!
-                p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
-                if p_data.get('candidates'):
-                    cand = p_data['candidates'][0]
-                    clean_name = cand['name']
-                    
-                    if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
-                        continue
-                    
-                    loc = cand['geometry']['location']
-                    valid_coords.append({
-                        '장소': clean_name,
-                        '주소': cand.get('formatted_address', '주소 정보 없음'),
-                        'place_id': cand.get('place_id', ''),
-                        'lat': loc['lat'], 
-                        'lng': loc['lng']
-                    })
-            except Exception:
-                # [여기] except도 try와 세로 줄을 맞춰야 합니다.
-                continue
+            for p in places_found:
+                try:
+                    # [여기] 이 내용들이 try보다 4칸 더 들어가 있어야 합니다!
+                    p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
+                    if p_data.get('candidates'):
+                        cand = p_data['candidates'][0]
+                        clean_name = cand['name']
+                        
+                        if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+                            continue
+                        
+                        loc = cand['geometry']['location']
+                        valid_coords.append({
+                            '장소': clean_name,
+                            '주소': cand.get('formatted_address', '주소 정보 없음'),
+                            'place_id': cand.get('place_id', ''),
+                            'lat': loc['lat'], 
+                            'lng': loc['lng']
+                        })
+                except Exception:
+                    # [여기] except도 try와 세로 줄을 맞춰야 합니다.
+                    continue
                 
                 st.session_state.valid_coords = valid_coords
                 st.session_state.map_data = m
