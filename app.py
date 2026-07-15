@@ -47,7 +47,7 @@ def save_feedback(rating, comment):
             
             # 2. open_by_key로 열기
             spreadsheet = client.open_by_key(spreadsheet_id)
-            sheet = spreadsheet.worksheet("피드백")
+            sheet = spreadsheet.worksheet("시트1")
             
             # 3. 데이터 추가
             sheet.append_row([str(datetime.datetime.now()), rating, comment])
