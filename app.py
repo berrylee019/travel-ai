@@ -115,10 +115,11 @@ if submit_button:
                 # (C) 좌표 수집 및 필터링
                 for p in places_found:
                     try:
-                        p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
+                        p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id', 'plus_code'])
                         if p_data.get('candidates'):
                             cand = p_data['candidates'][0]
-                            loc = cand['geometry']['location']
+                            #loc = cand['geometry']['location']
+                            addr = cand.get('formatted_address', '').lower()
                             
                             #clean_name = cand['name']
                             #if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
