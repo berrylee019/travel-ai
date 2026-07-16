@@ -152,7 +152,8 @@ if submit_button:
                     for item in valid_coords:
                         folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
                     
-                    route_coords = [[item['lat'], item['lng']] for item in valid_coords]
+                        route_coords.append([item['lat'], item['lng']])
+                        
                     folium.PolyLine(route_coords, color="blue", weight=2.5).add_to(m)
                     
                     # 세션 저장
