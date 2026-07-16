@@ -109,7 +109,7 @@ if submit_button:
                         radius=50000
                     )
                     if results and 'results' in results:
-                        for place in results['results'][:2]:
+                        for place in results['results'][:5]:
                             places_found.append({"name": place['name']})
                 
                 # (C) 좌표 수집 및 필터링
