@@ -117,6 +117,17 @@ if submit_button:
                             cand = details.get('result', {})
                             addr = cand.get('formatted_address', '').lower()
                             name = cand.get('name', '')
+
+                            if destination in cand.get('formatted_address', '') or "korea" in addr:
+                                loc = cand['geometry']['location']
+                                valid_coords.append({
+                                    '장소': name,
+                                    '주소': cand.get('formatted_address', '주소 정보 없음'),
+                                    'lat': loc['lat'], 
+                                    'lng': loc['lng']
+                                })
+                                # 너무 많이 쌓이지 않게 제한
+                                if len(valid_coords) >= 10: break
                 
                 # (C) 좌표 수집 및 필터링
                 for p in places_found:
