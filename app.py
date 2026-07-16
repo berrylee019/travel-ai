@@ -136,15 +136,15 @@ if submit_button:
                 #st.write("현재 좌표 데이터:", path_coordinates)
 
                     # 2. 사용자가 여행 정보를 입력하고 '생성' 버튼을 눌렀을 때
-                if st.button("일정 생성"):
-                    if destination:
-                        new_coords = calculate_route(destination) # 경로 계산 함수 호출
+                #if st.button("일정 생성"):
+                    #if destination:
+                        #new_coords = calculate_route(destination) # 경로 계산 함수 호출
                     
                     # [핵심] 여기에 값을 할당합니다
-                        st.session_state.path_coordinates = new_coords 
-                        st.success("경로가 생성되었습니다!")
-                    else:
-                        st.warning("여행지를 입력해주세요.")
+                        #st.session_state.path_coordinates = new_coords 
+                        #st.success("경로가 생성되었습니다!")
+                    #else:
+                        #st.warning("여행지를 입력해주세요.")
             
                 # (D) 지도 시각화 (장소가 있을 때만 m 생성)
                 if valid_coords:
