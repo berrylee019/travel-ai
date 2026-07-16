@@ -133,7 +133,7 @@ if submit_button:
                     except Exception:
                         continue
                 # 경로를 그리기 전에 좌표 데이터 출력 확인
-                st.write("현재 좌표 데이터:", path_coordinates)
+                #st.write("현재 좌표 데이터:", path_coordinates)
 
                     # 2. 사용자가 여행 정보를 입력하고 '생성' 버튼을 눌렀을 때
                 if st.button("일정 생성"):
