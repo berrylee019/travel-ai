@@ -149,6 +149,16 @@ if submit_button:
                         #st.success("경로가 생성되었습니다!")
                     #else:
                         #st.warning("여행지를 입력해주세요.")
+
+        # (C) 좌표 수집 및 필터링 후, 유효하지 않은 좌표 제거
+            clean_coords = []
+            for item in valid_coords:
+                # 위도나 경도가 0인 경우(검색 실패 데이터)는 제외
+                if item['lat'] != 0 and item['lng'] != 0:
+                    clean_coords.append(item)
+            
+            # 이제 clean_coords를 valid_coords로 사용합니다.
+            valid_coords = clean_coords
             
         # (D) 지도 시각화 (장소가 있을 때만 m 생성)
             try:
