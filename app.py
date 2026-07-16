@@ -9,9 +9,13 @@ import datetime
 import json
 
 # 1. 상단에 빈 리스트로 초기화 (가장 중요!)
-if "path_coordinates" not in st.session_state:
-    st.session_state.path_coordinates = []
-        
+#if "path_coordinates" not in st.session_state:
+#    st.session_state.path_coordinates = []
+
+# 일반 변수를 호출하려고 하니 파이썬이 찾지 못하는 것
+if path_coordinates: 
+    draw_map(path_coordinates)
+
 st.image("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9zqBbDRhDl9WATjDpLOFMhMosMBDQU07rVsVV80jqjCJ70MxpCx2didYnGQXI7Lg7952zQKC8aZWHFDN06ZN2rSJKwU5Bt2A-TdZo1ZX8PIQSLmRbnSgRWPcfm1aoLM1xkaAw9-mXAKxDymCpTUuebAz8qG2SFLGYUjhRxMYEIdwEMuSvMnpGNTkeolo/s1248/Ah6RG.jpg", use_container_width=True)
 
 # --- 설정 및 함수 정의 (상단 유지) ---
