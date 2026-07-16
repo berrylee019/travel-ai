@@ -9,8 +9,8 @@ import datetime
 import json
 
 # 1. 상단에 빈 리스트로 초기화 (가장 중요!)
-if "path_coordinates" not in st.session_state:
-    st.session_state.path_coordinates = []
+#if "path_coordinates" not in st.session_state:
+#    st.session_state.path_coordinates = []
 
 # 일반 변수를 호출하려고 하니 파이썬이 찾지 못하는 것
 #if path_coordinates: 
