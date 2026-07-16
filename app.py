@@ -130,8 +130,12 @@ if submit_button:
                                 'lat': loc['lat'], 
                                 'lng': loc['lng']
                             })
-            except Exception as e:
-                continue
+                    except Exception as e:
+                        continue
+
+            except Exception as e: # <--- 이 부분이 반드시 있어야 합니다!
+                st.error(f"오류 발생: {e}")
+                
                 # 경로를 그리기 전에 좌표 데이터 출력 확인
                 #st.write("현재 좌표 데이터:", path_coordinates)
 
