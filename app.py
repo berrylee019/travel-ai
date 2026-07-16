@@ -191,7 +191,11 @@ if submit_button:
 
             except Exception as e:
                 st.error(f"오류 발생: {e}")
-                        
+
+            # 지도 그리기 직전에 확인용 코드
+            st.write(f"현재 수집된 좌표 개수: {len(valid_coords)}")
+            st.write(valid_coords)
+
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     dest = st.session_state.get("destination", "여행지")
