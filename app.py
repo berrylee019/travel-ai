@@ -172,7 +172,7 @@ if submit_button:
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     #dest = st.session_state.get("destination", "여행지")
-    st.subheader(f"📍 {st.session_state.destination} 추천 경로 및 일정")
+    st.subheader(f"📍 {st.session_state.get('destination', '여행지')} 추천 경로 및 일정")
     
     # 1. 레이아웃
     col1, col2 = st.columns([1, 1])
@@ -197,7 +197,7 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     with col2:
         num_days = int(st.session_state.get('days', 1))
         data = st.session_state.valid_coords
-        daily_groups = np.array_split(data, num_days)
+        daily_groups = np.array_split(st.session_state.valid_coords, num_days)
         tabs = st.tabs([f"{i+1}일차" for i in range(num_days)])
         
         for i, tab in enumerate(tabs):
