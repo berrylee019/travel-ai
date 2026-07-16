@@ -123,7 +123,9 @@ if submit_button:
                             })
                     except Exception:
                         continue
-                
+                # 경로를 그리기 전에 좌표 데이터 출력 확인
+                st.write("현재 좌표 데이터:", path_coordinates)
+
                 # (D) 지도 시각화 (장소가 있을 때만 m 생성)
                 if valid_coords:
                     m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
