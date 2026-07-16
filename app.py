@@ -120,7 +120,12 @@ if submit_button:
                             cand = p_data['candidates'][0]
                             #clean_name = cand['name']
                             #if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
-                            if destination not in cand.get('formatted_address', ''):
+                            #if destination not in cand.get('formatted_address', ''):
+                            addr = cand.get('formatted_address', '')
+                            name = cand.get('name', '')
+                            
+                            # '강화' 또는 'Incheon'이 주소나 이름에 포함되어야 함
+                            if not ("강화" in addr or "강화" in name or "Incheon" in addr):
                                 continue
                             
                             loc = cand['geometry']['location']
