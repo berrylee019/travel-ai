@@ -8,6 +8,10 @@ from oauth2client.service_account import ServiceAccountCredentials
 import datetime
 import json
 
+    # 1. 상단에 빈 리스트로 초기화 (가장 중요!)
+    if "path_coordinates" not in st.session_state:
+        st.session_state.path_coordinates = []
+        
 st.image("https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9zqBbDRhDl9WATjDpLOFMhMosMBDQU07rVsVV80jqjCJ70MxpCx2didYnGQXI7Lg7952zQKC8aZWHFDN06ZN2rSJKwU5Bt2A-TdZo1ZX8PIQSLmRbnSgRWPcfm1aoLM1xkaAw9-mXAKxDymCpTUuebAz8qG2SFLGYUjhRxMYEIdwEMuSvMnpGNTkeolo/s1248/Ah6RG.jpg", use_container_width=True)
 
 # --- 설정 및 함수 정의 (상단 유지) ---
@@ -126,6 +130,17 @@ if submit_button:
                 # 경로를 그리기 전에 좌표 데이터 출력 확인
                 st.write("현재 좌표 데이터:", path_coordinates)
 
+                    # 2. 사용자가 여행 정보를 입력하고 '생성' 버튼을 눌렀을 때
+                if st.button("일정 생성"):
+                    if destination:
+                        new_coords = calculate_route(destination) # 경로 계산 함수 호출
+                    
+                    # [핵심] 여기에 값을 할당합니다
+                        st.session_state.path_coordinates = new_coords 
+                        st.success("경로가 생성되었습니다!")
+                    else:
+                        st.warning("여행지를 입력해주세요.")
+            
                 # (D) 지도 시각화 (장소가 있을 때만 m 생성)
                 if valid_coords:
                     m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
@@ -161,27 +176,15 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
         #st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
         if st.session_state.get("map_data"):
             st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
-    
-    # 3. 일정 탭 출력
-    # 1. 상단에 빈 리스트로 초기화 (가장 중요!)
-    if "path_coordinates" not in st.session_state:
-        st.session_state.path_coordinates = []
-    
-    # 2. 사용자가 여행 정보를 입력하고 '생성' 버튼을 눌렀을 때
-    if st.button("일정 생성"):
-        # AI로 경로 계산 후
-        new_coords = calculate_route(destination) # 경로 계산 함수 호출
-        
-        # [핵심] 여기에 값을 할당합니다
-        st.session_state.path_coordinates = new_coords 
 
-    # 3. 지도에 그리는 부분
-    if st.session_state.path_coordinates:
-        # 데이터가 있을 때만 지도를 그림
-        draw_map(st.session_state.path_coordinates)
-    else:
-        st.info("여행지를 입력하고 일정을 생성해 주세요.")
-    
+        # 3. 지도에 그리는 부분
+        if st.session_state.path_coordinates:
+            # 데이터가 있을 때만 지도를 그림
+            draw_map(st.session_state.path_coordinates)
+        else:
+            st.info("여행지를 입력하고 일정을 생성해 주세요.")
+        
+    # 3. 일정 탭 출력 
     
     with col2:
         num_days = int(st.session_state.get('days', 1))
