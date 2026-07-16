@@ -147,32 +147,37 @@ if submit_button:
                         #st.warning("여행지를 입력해주세요.")
             
                 # (D) 지도 시각화 (장소가 있을 때만 m 생성)
-                if valid_coords:
-                    m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
-                    
-                    # 1. 경로를 담을 리스트를 생성합니다.
-                    coords_list = [[item['lat'], item['lng']] for item in valid_coords]
-                    
-                    # 2. 경로선(PolyLine)을 한 번만 그립니다.
-                    folium.PolyLine(coords_list, color="blue", weight=2.5).add_to(m)
-                    
-                    # 3. 마커를 추가합니다.
-                    for item in valid_coords:
-                        folium.Marker(
-                            [item['lat'], item['lng']], 
-                            popup=item['장소']
-                        ).add_to(m)
-                    
-                    # 4. 세션 상태에 저장
-                    st.session_state.valid_coords = valid_coords
-                    st.session_state.map_data = m
-                    st.session_state.days = days
-                    st.session_state.destination = destination
-                    st.session_state.show_result = True
-                else:
-                    st.warning("검색 결과가 없습니다.")
-                    st.session_state.show_result = False
+                    try:
+                        
+                        if valid_coords:
+                            m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
+                            
+                            # 1. 경로를 담을 리스트를 생성합니다.
+                            coords_list = [[item['lat'], item['lng']] for item in valid_coords]
+                            
+                            # 2. 경로선(PolyLine)을 한 번만 그립니다.
+                            folium.PolyLine(coords_list, color="blue", weight=2.5).add_to(m)
+                            
+                            # 3. 마커를 추가합니다.
+                            for item in valid_coords:
+                                folium.Marker(
+                                    [item['lat'], item['lng']], 
+                                    popup=item['장소']
+                                ).add_to(m)
+                            
+                            # 4. 세션 상태에 저장
+                            st.session_state.valid_coords = valid_coords
+                            st.session_state.map_data = m
+                            st.session_state.days = days
+                            st.session_state.destination = destination
+                            st.session_state.show_result = True
+                        else:
+                            st.warning("검색 결과가 없습니다.")
+                            st.session_state.show_result = False
 
+                    except Exception as e:
+                        st.error(f"오류 발생: {e}")
+                        
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     dest = st.session_state.get("destination", "여행지")
