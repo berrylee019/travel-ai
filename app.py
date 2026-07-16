@@ -68,11 +68,6 @@ gmaps = get_gmaps_client()
 
 # --- 앱 실행부 ---
 st.title("✈️ 여행 비서 AI: 제로 클릭 일정 생성")
-
-# 1. 상단에 빈 리스트로 초기화 (가장 중요!)
-if "path_coordinates" not in st.session_state:
-    st.session_state.path_coordinates = []
-
     
 with st.form("travel_form"):
     destination = st.text_input("여행지")
@@ -168,6 +163,10 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
             st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
     
     # 3. 일정 탭 출력
+    # 1. 상단에 빈 리스트로 초기화 (가장 중요!)
+    if "path_coordinates" not in st.session_state:
+        st.session_state.path_coordinates = []
+    
     # 2. 사용자가 여행 정보를 입력하고 '생성' 버튼을 눌렀을 때
     if st.button("일정 생성"):
         # AI로 경로 계산 후
