@@ -164,6 +164,13 @@ if submit_button:
             try:
                 
                 if valid_coords:
+                    # 데이터 내용 확인 (이건 무조건 보일 겁니다)
+                    st.sidebar.write("### 현재 수집된 좌표 데이터")
+                    st.sidebar.write(f"개수: {len(valid_coords)}개")
+                    st.sidebar.json(valid_coords) # 데이터 내용을 사이드바에 고정 출력
+                    
+                    # ... (이하 지도 시각화 로직) ...
+                    
                     m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
                     
                     # 1. 경로를 담을 리스트를 생성합니다.
@@ -192,9 +199,9 @@ if submit_button:
             except Exception as e:
                 st.error(f"오류 발생: {e}")
 
-            # 지도 그리기 직전에 확인용 코드
-            st.write(f"현재 수집된 좌표 개수: {len(valid_coords)}")
-            st.write(valid_coords)
+                    # 지도 그리기 직전에 확인용 코드
+                    st.write(f"현재 수집된 좌표 개수: {len(valid_coords)}")
+                    st.write(valid_coords)
 
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
