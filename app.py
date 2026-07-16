@@ -104,9 +104,9 @@ if submit_button:
                 places_found = []
                 for interest in interests:
                     results = gmaps.places(
-                        query=f"{interest} in {destination}",
-                        location=(dest_lat, dest_lng),
-                        radius=50000
+                        query=f"{interest} {destination}",
+                        #location=(dest_lat, dest_lng),
+                        #radius=50000
                     )
                     if results and 'results' in results:
                         for place in results['results'][:5]:
