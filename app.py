@@ -192,6 +192,8 @@ if submit_button:
                     st.session_state.days = days
                     st.session_state.destination = destination
                     st.session_state.show_result = True
+
+                    st.rerun()
                 else:
                     st.warning("검색 결과가 없습니다.")
                     st.session_state.show_result = False
