@@ -110,7 +110,13 @@ if submit_button:
                     )
                     if results and 'results' in results:
                         for place in results['results'][:2]:
-                            places_found.append({"name": place['name']})
+                            #places_found.append({"name": place['name']})
+                            p_id = place.get('place_id')
+                            details = gmaps.place(place_id=p_id, fields=['name', 'formatted_address', 'geometry'])
+                            
+                            cand = details.get('result', {})
+                            addr = cand.get('formatted_address', '').lower()
+                            name = cand.get('name', '')
                 
                 # (C) 좌표 수집 및 필터링
                 for p in places_found:
