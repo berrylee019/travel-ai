@@ -172,16 +172,16 @@ if submit_button:
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     dest = st.session_state.get("destination", "여행지")
-    st.subheader(f"📍 {dest} 추천 경로 및 일정")
+    st.subheader(f"📍 {st.session_state.destination} 추천 경로 및 일정")
     
     # 1. 레이아웃
     col1, col2 = st.columns([1, 1])
     
     # 2. 지도 출력
     with col1:
-        #st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
-        if st.session_state.get("map_data"):
-            st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
+        st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
+        #if st.session_state.get("map_data"):
+        #    st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
 
         # 3. 지도에 그리는 부분
         if st.session_state.path_coordinates:
