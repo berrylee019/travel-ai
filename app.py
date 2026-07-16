@@ -28,7 +28,7 @@ def get_client():
         creds_dict = json.loads(raw_data)
     else:
         creds_dict = raw_data
-    return creds_dict
+    #return creds_dict
     
     # 3. 권한 범위 설정
     scope = [
