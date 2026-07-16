@@ -124,7 +124,8 @@ if submit_button:
                                     '장소': name,
                                     '주소': cand.get('formatted_address', '주소 정보 없음'),
                                     'lat': loc['lat'], 
-                                    'lng': loc['lng']
+                                    'lng': loc['lng'],
+                                    'place_id': p_id
                                 })
                                 # 너무 많이 쌓이지 않게 제한
                                 if len(valid_coords) >= 10: break
