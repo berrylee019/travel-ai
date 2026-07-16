@@ -149,6 +149,9 @@ if submit_button:
                 # (D) 지도 시각화 (장소가 있을 때만 m 생성)
                 if valid_coords:
                     m = folium.Map(location=[dest_lat, dest_lng], zoom_start=11)
+                    local_route_coords = [[item['lat'], item['lng']] for item in valid_coords]
+                    folium.PolyLine(local_route_coords, color="blue", weight=2.5).add_to(m)
+                    
                     for item in valid_coords:
                         folium.Marker([item['lat'], item['lng']], popup=item['장소']).add_to(m)
                     
