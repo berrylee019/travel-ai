@@ -196,6 +196,7 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     
     with col2:
         num_days = int(st.session_state.get('days', 1))
+        data = st.session_state.valid_coords
         daily_groups = np.array_split(st.session_state.valid_coords, num_days)
         tabs = st.tabs([f"{i+1}일차" for i in range(num_days)])
         
