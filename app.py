@@ -118,8 +118,9 @@ if submit_button:
                         p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
                         if p_data.get('candidates'):
                             cand = p_data['candidates'][0]
-                            clean_name = cand['name']
-                            if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+                            #clean_name = cand['name']
+                            #if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
+                            if destination not in cand.get('formatted_address', ''):
                                 continue
                             
                             loc = cand['geometry']['location']
