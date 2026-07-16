@@ -205,6 +205,13 @@ if submit_button:
             st.write(f"현재 수집된 좌표 개수: {len(valid_coords)}")
             st.write(valid_coords)
 
+# --- 1. 출력부 코드 시작 전 ---
+# 폼 바깥에서 세션 상태를 직접 확인하여 출력합니다.
+if st.session_state.get("valid_coords"):
+    st.sidebar.write("### 현재 수집된 좌표 데이터")
+    st.sidebar.write(f"개수: {len(st.session_state.valid_coords)}개")
+    st.sidebar.json(st.session_state.valid_coords)
+    
 # --- [중요] 출력부는 오직 아래 블록 하나만 남기세요! ---
 if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     dest = st.session_state.get("destination", "여행지")
