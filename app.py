@@ -118,6 +118,8 @@ if submit_button:
                         p_data = gmaps.find_place(p['name'], 'textquery', fields=['name', 'geometry', 'formatted_address', 'place_id'])
                         if p_data.get('candidates'):
                             cand = p_data['candidates'][0]
+                            loc = cand['geometry']['location']
+                            
                             #clean_name = cand['name']
                             #if any(char.isdigit() for char in clean_name) and len(clean_name) < 10:
                             #if destination not in cand.get('formatted_address', ''):
@@ -125,7 +127,8 @@ if submit_button:
                             name = cand.get('name', '')
                             
                             # '강화' 또는 'Incheon'이 주소나 이름에 포함되어야 함
-                            if not ("강화" in addr or "강화" in name or "Incheon" in addr):
+                            #if not ("강화" in addr or "강화" in name or "Incheon" in addr):
+                            if abs(loc['lat'] - dest_lat) > 0.5 or abs(loc['lng'] - dest_lng) > 0.5:
                                 continue
                             
                             loc = cand['geometry']['location']
