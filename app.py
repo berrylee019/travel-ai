@@ -179,16 +179,18 @@ if st.session_state.get("show_result") and st.session_state.get("valid_coords"):
     
     # 2. 지도 출력
     with col1:
-        st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
-        #if st.session_state.get("map_data"):
-        #    st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
-
-        # 3. 지도에 그리는 부분
-        if st.session_state.path_coordinates:
-            # 데이터가 있을 때만 지도를 그림
-            draw_map(st.session_state.path_coordinates)
+        #st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
+        if st.session_state.get("map_data"):
+            st_folium(st.session_state.map_data, width=400, height=400, key="map_unique")
         else:
-            st.info("여행지를 입력하고 일정을 생성해 주세요.")
+            st.warning("지도를 불러올 수 없습니다.")
+    
+        # 3. 지도에 그리는 부분
+        #if st.session_state.path_coordinates:
+            # 데이터가 있을 때만 지도를 그림
+            #draw_map(st.session_state.path_coordinates)
+        #else:
+            #st.info("여행지를 입력하고 일정을 생성해 주세요.")
         
     # 3. 일정 탭 출력 
     
